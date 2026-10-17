@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Desk · Countersign</title>
+  <meta name="description" content="Drag a bill onto the scanner and watch Countersign check it.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg viewBox=%220 0 32 32%22 xmlns=%22http://www.w3.org/2000/svg%22 role=%22img%22 aria-label=%22Countersign%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%23d4f74a%22/%3E%3Cpath d=%22M8 32V21h11v11z%22 fill=%22%233340f2%22/%3E%3Cpath d=%22M7.5 11.5 7 7.6l3 2.2zM10.6 8.6l1-3.9 2 3.3zM14.4 7.6l2.1-3.3 1.2 3.6z%22 fill=%22%231b1f8f%22/%3E%3Cpath d=%22M5 19.5C5 11.8 11.4 7.6 18.6 8c6.2.4 10.4 4.2 10.4 9.4 0 4.8-3.8 7.1-9.4 7.1C11.7 24.5 5 24.3 5 19.5z%22 fill=%22%233340f2%22/%3E%3Ccircle cx=%2216.6%22 cy=%2214.6%22 r=%223.4%22 fill=%22%23fff%22/%3E%3Ccircle cx=%2217.5%22 cy=%2215%22 r=%221.75%22 fill=%22%2313123a%22/%3E%3Ccircle cx=%2216.6%22 cy=%2214.6%22 r=%224.5%22 fill=%22none%22 stroke=%22%2313123a%22 stroke-width=%221.3%22/%3E%3Cpath d=%22M12.1 14.2 9.6 13.4%22 stroke=%22%2313123a%22 stroke-width=%221.3%22 stroke-linecap=%22round%22/%3E%3Cellipse cx=%2226.2%22 cy=%2213.6%22 rx=%22.7%22 ry=%221%22 fill=%22%231b1f8f%22/%3E%3Cpath d=%22M19.6 20.4q3.8 2.2 7.6-.6%22 fill=%22none%22 stroke=%22%2313123a%22 stroke-width=%221.3%22 stroke-linecap=%22round%22/%3E%3C/svg%3E">
+</head>
+<body class="desk-body">
+
+<nav class="nav scrolled">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="brand-mark" data-mark></span>Countersign</a>
+    <div class="nav-links"><a href="index.html#checks">Checks</a><a href="index.html#pipeline">How it works</a><a href="index.html#api">API</a></div>
+    <div class="nav-ctas"><a class="btn sm ghost" href="index.html">← How it works</a><a class="btn sm" href="app.html">Open console →</a></div>
+  </div>
+</nav>
+
+<main class="wrap">
+  <div class="desk-head">
+    <div>
+      <span class="eyebrow">Live demo</span>
+      <h1 style="margin-top:10px">The Desk</h1>
+      <p>Three bills just arrived. Drag one onto the scanner (or tap it). Countersign checks it. <b>You</b> decide.</p>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <span class="mode"><i></i>Demo mode · sample vendor data</span>
+      <button class="mode" id="reset" style="cursor:pointer">↺ Reset desk</button>
+    </div>
+  </div>
+
+  <div class="desk">
+    <aside class="tray">
+      <h2>Inbox · 3 bills</h2>
+      <div class="tray-list" id="tray"></div>
+      <p class="tray-hint">All bills are samples made for this demo.</p>
+      <h2 style="margin-top:22px">Your records</h2>
+      <div id="records" style="font-size:12.5px;color:var(--ink-2);display:grid;gap:8px"></div>
+    </aside>
+
+    <section class="scanner" id="scanner" style="padding:26px">
+      <div class="empty" id="empty">
+        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><rect x="10" y="6" width="28" height="36" rx="3"/><path d="M16 16h16M16 23h16M16 30h10"/><path d="M4 24h40" stroke-dasharray="3 3"/></svg>
+        <b>Drop a bill here</b>
+        Countersign runs eight checks and stamps it. Nothing gets paid without your signature.
+      </div>
+    </section>
+
+    <aside class="side">
+      <div class="box" style="position:relative">
+        <div class="desk-sig" data-sig data-mood="wave" id="desk-sig" title="Sig: tiny arms, can't press pay"></div>
+        <div class="meters">
+          <div class="meter"><span>Risk</span><b id="risk">–</b><div class="bar"><i id="risk-bar"></i></div></div>
+          <div class="meter"><span>Confidence</span><b id="conf">–</b><div class="bar"><i id="conf-bar"></i></div></div>
+        </div>
+        <div class="verdict" id="verdict"><span class="muted">Waiting for a bill…</span></div>
+        <div id="combos"></div>
+      </div>
+
+      <div class="box">
+        <h2>Checks</h2>
+        <div class="checklist" id="checklist"></div>
+      </div>
+
+      <div class="box">
+        <h2>Your call</h2>
+        <div class="actions">
+          <button class="btn green" id="sign" disabled>Sign &amp; pay</button>
+          <button class="btn red" id="reject" disabled>Reject</button>
+          <button class="btn ghost" id="call" disabled>Call vendor</button>
+        </div>
+        <p class="act-note" id="act-note">Countersign can stamp a bill. Only you can pay it.</p>
+      </div>
+
+      <div class="box ai-memo" id="memo-box" hidden>
+        <span class="lbl">Summary · written after scoring, never changes it</span>
+        <div id="memo"></div>
+      </div>
+
+      <div class="box">
+        <h2>Decision log</h2>
+        <div class="journal" id="journal"><div class="empty-j">Your decisions and what Countersign learned from them show up here.</div></div>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+<script type="module" src="js/desk.js"></script>
+<script type="module">
+  // Sig reacts to whatever the desk is doing. Reads the DOM only; desk.js stays untouched.
+  import { mountSigs, setMood } from './js/mascot.js';
+  mountSigs();
+  const sig = document.getElementById('desk-sig');
+  const verdict = document.getElementById('verdict');
+  const scanner = document.getElementById('scanner');
+  const sync = () => {
+    if (scanner.querySelector('.invoice.scanning')) return setMood(sig, 'scan');
+    const band = ['stop', 'hold', 'clear'].find((b) => verdict.classList.contains(b));
+    setMood(sig, band || (scanner.querySelector('.invoice') ? 'idle' : 'wave'));
+  };
+  new MutationObserver(sync).observe(verdict, { attributes: true, attributeFilter: ['class'] });
+  new MutationObserver(sync).observe(scanner, { subtree: true, childList: true, attributes: true, attributeFilter: ['class'] });
+</script>
+</body>
+</html>

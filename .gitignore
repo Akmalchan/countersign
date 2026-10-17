@@ -1,0 +1,9 @@
+# secrets and local data: never commit
+.env
+**/.env
+core/data/
+core/cache/
+core/uploads/
+node_modules/
+.DS_Store
+*.log

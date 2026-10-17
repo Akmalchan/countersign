@@ -1,0 +1,86 @@
+/* "How the checks work" page. All classes prefixed cd- . Uses console tokens. */
+.cd-page { max-width: 880px; margin: 0 auto; display: grid; gap: 20px; color: var(--ink); font-family: var(--sans); }
+.cd-page .card { background: #fff; border: 1px solid var(--line); border-radius: 14px; }
+
+/* intro */
+.cd-intro { padding: 4px 2px 4px; }
+.cd-intro h2 { font: 650 24px/1.2 var(--sans); letter-spacing: -.015em; margin: 0 0 8px; }
+.cd-intro p { margin: 0 0 18px; color: var(--ink-2); font-size: 15.5px; line-height: 1.6; max-width: 660px; }
+.cd-spend { margin: 14px 0 0 !important; font-size: 13.5px !important; color: var(--ink-3) !important; }
+.cd-spend b { color: var(--ink); font-weight: 600; }
+
+/* pipeline: boxes joined by thin connector lines (no glyphs) */
+.cd-pipe { list-style: none; margin: 0; padding: 0; display: flex; align-items: stretch; gap: 22px; }
+.cd-pipe li {
+  position: relative; flex: 1 1 0; min-width: 0;
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 14px; background: #fff; border: 1px solid var(--line); border-radius: 12px;
+  font: 600 14px/1.3 var(--sans); color: var(--ink);
+}
+.cd-pipe li:not(:last-child)::after {
+  content: ''; position: absolute; top: 50%; right: -23px; width: 22px; height: 1px; background: var(--line-2);
+}
+.cd-pipe-n {
+  flex: none; width: 24px; height: 24px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--paper-2); color: var(--ink-3);
+  font: 600 12px var(--sans);
+}
+.cd-pipe li.cd-pipe-last { border-color: var(--blue); }
+.cd-pipe li.cd-pipe-last .cd-pipe-n { background: var(--blue-soft); color: var(--blue); }
+
+/* groups */
+.cd-group-h h2, .cd-group .card-h h2 { margin: 0; font: 650 16px var(--sans); letter-spacing: -.005em; }
+.cd-count { font: 600 12.5px var(--sans); color: var(--ink-3); background: var(--paper-2); padding: 3px 10px; border-radius: 999px; }
+.cd-data { padding: 12px 22px; font-size: 13.5px; color: var(--ink-3); border-bottom: 1px solid var(--line); background: #fafbfc; }
+.cd-list { display: grid; }
+
+/* one check */
+.cd-check { padding: 20px 22px; border-top: 1px solid var(--line); display: grid; gap: 8px; }
+.cd-check:first-child { border-top: 0; }
+.cd-check-h { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.cd-name { margin: 0; font: 650 15.5px/1.3 var(--sans); color: var(--ink); }
+.cd-plain { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--ink-2); }
+.cd-formula {
+  margin: 4px 0 2px; padding: 12px 14px;
+  background: #f6f7f9; border: 1px solid var(--line); border-radius: 10px;
+  font: 12.5px/1.7 var(--mono); color: var(--ink);
+  white-space: pre-wrap; overflow-wrap: anywhere;
+}
+.cd-note { margin: 0; font-size: 13px; color: var(--ink-3); }
+.cd-meta { margin: 0; font-size: 13px; color: var(--ink-3); }
+.cd-meta b { color: var(--ink-2); font-weight: 600; }
+.cd-example { margin: 0; font-size: 13px; color: var(--ink-2); display: flex; gap: 10px; align-items: baseline; }
+.cd-example span { flex: none; font: 600 11.5px var(--sans); color: var(--ink-3); text-transform: uppercase; letter-spacing: .04em; }
+
+/* score / learn / rules */
+.cd-prose { display: grid; gap: 12px; padding: 20px 22px; }
+.cd-prose p { margin: 0; font-size: 14.5px; line-height: 1.6; color: var(--ink-2); }
+.cd-sub { margin-top: 6px; font: 600 13px var(--sans); color: var(--ink-3); }
+.cd-bullets { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; font-size: 14.5px; color: var(--ink-2); }
+.cd-bullets b { display: inline-block; min-width: 40px; color: var(--ink); font-weight: 650; }
+.cd-muted { color: var(--ink-3) !important; font-size: 13.5px !important; }
+
+.cd-stamps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.cd-stamp { display: grid; gap: 4px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); font-size: 13.5px; color: var(--ink-2); line-height: 1.5; }
+.cd-stamp b { font: 700 12px var(--sans); letter-spacing: .04em; text-transform: uppercase; }
+.cd-stop { background: #fff5f4; border-color: #f6cdc8; } .cd-stop b { color: var(--red); }
+.cd-hold { background: #fffaf0; border-color: #f2dfb1; } .cd-hold b { color: var(--amber); }
+.cd-clear { background: #f3fbf6; border-color: #c9ead6; } .cd-clear b { color: var(--green); }
+.cd-callout { padding: 12px 14px; border-radius: 10px; background: #fafbfc; border: 1px solid var(--line); font-size: 14px !important; }
+
+.cd-rules { margin: 0; padding: 4px 4px 4px 22px; display: grid; gap: 10px; font-size: 14.5px; color: var(--ink-2); line-height: 1.5; }
+.cd-rules li::marker { color: var(--ink-3); }
+
+/* narrow screens */
+@media (max-width: 760px) {
+  .cd-pipe { flex-direction: column; gap: 12px; }
+  .cd-pipe li:not(:last-child)::after { top: auto; bottom: -13px; right: auto; left: 26px; width: 1px; height: 12px; }
+  .cd-stamps { grid-template-columns: 1fr; }
+}
+@media (max-width: 520px) {
+  .cd-intro h2 { font-size: 21px; }
+  .cd-check, .cd-prose { padding: 16px; }
+  .cd-data { padding: 10px 16px; }
+  .cd-example { flex-direction: column; gap: 2px; }
+  .cd-formula { font-size: 12px; }
+}

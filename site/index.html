@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Countersign · Every bill checked, a human signs</title>
+  <meta name="description" content="Countersign catches fake invoices before money leaves, and never pays on its own.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg viewBox=%220 0 32 32%22 xmlns=%22http://www.w3.org/2000/svg%22 role=%22img%22 aria-label=%22Countersign%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%23d4f74a%22/%3E%3Cpath d=%22M8 32V21h11v11z%22 fill=%22%233340f2%22/%3E%3Cpath d=%22M7.5 11.5 7 7.6l3 2.2zM10.6 8.6l1-3.9 2 3.3zM14.4 7.6l2.1-3.3 1.2 3.6z%22 fill=%22%231b1f8f%22/%3E%3Cpath d=%22M5 19.5C5 11.8 11.4 7.6 18.6 8c6.2.4 10.4 4.2 10.4 9.4 0 4.8-3.8 7.1-9.4 7.1C11.7 24.5 5 24.3 5 19.5z%22 fill=%22%233340f2%22/%3E%3Ccircle cx=%2216.6%22 cy=%2214.6%22 r=%223.4%22 fill=%22%23fff%22/%3E%3Ccircle cx=%2217.5%22 cy=%2215%22 r=%221.75%22 fill=%22%2313123a%22/%3E%3Ccircle cx=%2216.6%22 cy=%2214.6%22 r=%224.5%22 fill=%22none%22 stroke=%22%2313123a%22 stroke-width=%221.3%22/%3E%3Cpath d=%22M12.1 14.2 9.6 13.4%22 stroke=%22%2313123a%22 stroke-width=%221.3%22 stroke-linecap=%22round%22/%3E%3Cellipse cx=%2226.2%22 cy=%2213.6%22 rx=%22.7%22 ry=%221%22 fill=%22%231b1f8f%22/%3E%3Cpath d=%22M19.6 20.4q3.8 2.2 7.6-.6%22 fill=%22none%22 stroke=%22%2313123a%22 stroke-width=%221.3%22 stroke-linecap=%22round%22/%3E%3C/svg%3E">
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="#top"><span class="brand-mark" data-mark></span>Countersign</a>
+    <div class="nav-links">
+      <a href="#story">The scam</a>
+      <a href="#checks">Checks</a>
+      <a href="#pipeline">How it works</a>
+      <a href="#plugins">Where it lives</a>
+      <a href="#api">API</a>
+      <a href="#cli">CLI</a>
+    </div>
+    <div class="nav-ctas"><a class="btn sm" href="app.html">Open the console →</a></div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">Invoice fraud protection for startups</span>
+      <h1 class="display" style="margin-top:20px">Every bill gets <span class="marker">checked.</span><br><em>A human</em> signs.</h1>
+      <p class="lead">Fake invoices look exactly like real ones. Countersign runs 14 checks on every bill, its email and the document itself before money leaves, shows you the proof, and never pays on its own.</p>
+      <div class="hero-ctas">
+        <a class="btn" href="app.html">Open the console →</a>
+        <a class="btn ghost" href="#story">See how the scam works</a>
+      </div>
+      <div class="hero-note"><span>14 checks in 3 groups</span><span>Proof on every flag</span><span>Learns from your calls</span></div>
+    </div>
+    <div class="hero-stage reveal" aria-label="Animated queue of bills being checked">
+      <div class="queue" id="queue"></div>
+      <div class="hero-checks">
+        <div class="hc-head"><span class="eyebrow">Countersign</span><span class="chip blue" id="hc-vendor">…</span></div>
+        <div id="hc-list"></div>
+        <div class="hc-result" id="hc-result">SCANNING</div>
+      </div>
+      <div class="hero-sig" data-sig data-mood="idle" id="hero-sig" title="Sig checks every bill"></div>
+      <div class="tally">
+        <div class="c"><b id="t-clear">0</b><span>clear</span></div>
+        <div class="h"><b id="t-hold">0</b><span>hold</span></div>
+        <div class="s"><b id="t-stop">0</b><span>stop</span></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ================= PROBLEM ================= -->
+<section class="problem" id="problem">
+  <div class="wrap">
+    <div class="section-head reveal" style="position:relative;z-index:1">
+      <span class="eyebrow">The problem</span>
+      <h2 class="h2">Fake bills took <em>$3 billion</em> from US businesses in 2025.</h2>
+      <p class="lead">Business email compromise is the second most expensive cybercrime the FBI tracks. It doesn't hack anything. It just sends an invoice and waits for someone to pay it.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat reveal"><b>$3.05B</b><p>lost to business email compromise in the US in 2025</p><small>FBI IC3 2025</small></div>
+      <div class="stat reveal"><b>24,768</b><p>companies and people reported it, up from 21,442 a year earlier</p><small>FBI IC3 2025</small></div>
+      <div class="stat reveal"><b>86%</b><p>of the money left by wire or ACH, which is very hard to get back</p><small>FBI IC3 2025</small></div>
+      <div class="stat reveal"><b>$20.9B</b><p>total reported cybercrime losses in 2025, up 26%</p><small>FBI IC3 2025</small></div>
+    </div>
+
+    <div class="problem-grid">
+      <div class="chart-card reveal">
+        <h3>Reported business email compromise losses, US</h3>
+        <div class="sub">Billions of dollars per year · FBI Internet Crime Complaint Center</div>
+        <div class="chart" id="bec-chart"></div>
+        <div class="chart-foot">
+          <span>Reported losses only; the real number is higher.</span>
+          <details><summary>View data table</summary><table id="bec-table"></table></details>
+        </div>
+      </div>
+      <div class="cases">
+        <div class="case reveal">
+          <div class="big">$23M</div>
+          <h3>Google paid a fake invoice</h3>
+          <p>From 2013 to 2015, one man in Lithuania emailed fake bills posing as a real hardware supplier. Google paid about $23M. Facebook paid about $98M.</p>
+          <small>US DOJ case, guilty plea in 2019</small>
+        </div>
+        <div class="case reveal">
+          <div class="big" style="color:var(--amber)">$249,999</div>
+          <h3>…and once paid a stranger by mistake</h3>
+          <p>In 2022 a security engineer got an unexpected quarter-million from Google. "Human error," Google said. If it happens there, it happens anywhere.</p>
+          <small>Widely reported, Aug 2022</small>
+        </div>
+      </div>
+    </div>
+    <p class="sources">Sources: FBI IC3 Internet Crime Reports 2019–2025 (2025 figures via published summaries of the report); US Department of Justice, United States v. Rimasauskas.</p>
+  </div>
+</section>
+
+<!-- ================= STORY ================= -->
+<section id="story" style="background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="section-head reveal" style="margin-bottom:40px">
+      <span class="eyebrow">The scam in 10 seconds</span>
+      <h2 class="h2">A fake bill only has to fool <em>one busy person.</em></h2>
+    </div>
+    <div class="duel">
+      <div class="duel-card bad reveal">
+        <div class="duel-sig" data-sig data-mood="busy"></div>
+        <span class="duel-tag">Without Countersign</span>
+        <ol class="duel-steps">
+          <li>A bill arrives "from Google Cloud"</li>
+          <li>It's from <span class="chip red">g00gle-cloud-billing.co</span> with a new bank account</li>
+          <li>A busy founder pays it</li>
+        </ol>
+        <div class="duel-result bad">−$48,250</div>
+      </div>
+      <div class="duel-vs" aria-hidden="true">vs</div>
+      <div class="duel-card good reveal">
+        <div class="duel-sig" data-sig data-mood="stop"></div>
+        <span class="duel-tag">With Countersign</span>
+        <ol class="duel-steps">
+          <li>The same bill arrives</li>
+          <li>14 checks run in seconds and flag 6 problems</li>
+          <li>Stamped <b style="color:var(--red)">STOP</b>. You call the real vendor</li>
+        </ol>
+        <div class="duel-result good">$0 lost</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PIPELINE ================= -->
+<section id="pipeline">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">How it works</span>
+      <h2 class="h2">Machines read the bill. Math judges it. <em>You</em> sign it.</h2>
+    </div>
+    <div class="arch-wrap reveal" id="flow">
+      <svg class="arch" viewBox="0 0 1130 520" role="img" aria-label="Countersign architecture: four ways in, read, six evidence sources, fourteen checks, score, stamp, human decision, learning loop">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10z"/></marker></defs>
+<text class="lane" x="20" y="22">IN</text><text class="lane" x="210" y="22">READ</text><text class="lane" x="430" y="22">EVIDENCE · 6 SOURCES</text><text class="lane" x="660" y="22">JUDGE</text><text class="lane" x="430" y="318">DECIDE + LEARN</text>
+<g class="an n-src"><rect x="20" y="40" width="150" height="46" rx="10"/><text class="t" x="34" y="62">Gmail inbox</text><text class="s" x="34" y="80">auto, every 2 min</text></g>
+<g class="an n-src"><rect x="20" y="96" width="150" height="46" rx="10"/><text class="t" x="34" y="118">Upload</text><text class="s" x="34" y="136">PDF or phone photo</text></g>
+<g class="an n-src"><rect x="20" y="152" width="150" height="46" rx="10"/><text class="t" x="34" y="174">CLI</text><text class="s" x="34" y="192">countersign scan</text></g>
+<g class="an n-src"><rect x="20" y="208" width="150" height="46" rx="10"/><text class="t" x="34" y="230">REST API</text><text class="s" x="34" y="248">POST /api/check</text></g>
+<path class="edge" d="M170 63 H190"/>
+<path class="edge" d="M170 119 H190"/>
+<path class="edge" d="M170 175 H190"/>
+<path class="edge" d="M170 231 H190"/>
+<path class="edge" d="M190 63 V231"/><path class="edge" d="M190 148 H208" marker-end="url(#ah)"/>
+<g class="an n-read"><rect x="210" y="88" width="170" height="122" rx="10"/><text class="t" x="224" y="110">Read</text><text class="s" x="224" y="128">pdf.js text layer</text><text class="s" x="224" y="143">Tesseract OCR (photos)</text><text class="s" x="224" y="158">field parser</text><text class="s" x="224" y="173">→ JSON fields</text></g>
+<g class="an n-ext small"><rect x="430" y="36" width="180" height="38" rx="10"/><text class="t" x="444" y="58">Vendor master</text><text class="s" x="444" y="76">past payments, accounts</text></g>
+<path class="edge" d="M380 148 C 405 148, 405 55, 428 55" marker-end="url(#ah)"/>
+<path class="edge" d="M610 55 C 635 55, 635 150, 658 150" marker-end="url(#ah)"/>
+<g class="an n-ext small"><rect x="430" y="82" width="180" height="38" rx="10"/><text class="t" x="444" y="104">Glasser → Hunter</text><text class="s" x="444" y="122">company record</text></g>
+<path class="edge" d="M380 148 C 405 148, 405 101, 428 101" marker-end="url(#ah)"/>
+<path class="edge" d="M610 101 C 635 101, 635 150, 658 150" marker-end="url(#ah)"/>
+<g class="an n-ext small"><rect x="430" y="128" width="180" height="38" rx="10"/><text class="t" x="444" y="150">Glasser → Serper</text><text class="s" x="444" y="168">scam reports</text></g>
+<path class="edge" d="M380 148 C 405 148, 405 147, 428 147" marker-end="url(#ah)"/>
+<path class="edge" d="M610 147 C 635 147, 635 150, 658 150" marker-end="url(#ah)"/>
+<g class="an n-ext small"><rect x="430" y="174" width="180" height="38" rx="10"/><text class="t" x="444" y="196">RDAP</text><text class="s" x="444" y="214">domain age</text></g>
+<path class="edge" d="M380 148 C 405 148, 405 193, 428 193" marker-end="url(#ah)"/>
+<path class="edge" d="M610 193 C 635 193, 635 150, 658 150" marker-end="url(#ah)"/>
+<g class="an n-ext small"><rect x="430" y="220" width="180" height="38" rx="10"/><text class="t" x="444" y="242">Mail headers</text><text class="s" x="444" y="260">DMARC · SPF · DKIM</text></g>
+<path class="edge" d="M380 148 C 405 148, 405 239, 428 239" marker-end="url(#ah)"/>
+<path class="edge" d="M610 239 C 635 239, 635 150, 658 150" marker-end="url(#ah)"/>
+<g class="an n-ext small"><rect x="430" y="266" width="180" height="38" rx="10"/><text class="t" x="444" y="288">PDF metadata</text><text class="s" x="444" y="306">producer, edit dates</text></g>
+<path class="edge" d="M380 148 C 405 148, 405 285, 428 285" marker-end="url(#ah)"/>
+<path class="edge" d="M610 285 C 635 285, 635 150, 658 150" marker-end="url(#ah)"/>
+<path class="edge" d="M295 88 V44 Q295 34 305 34 H640 Q650 34 650 44 V70 H658" marker-end="url(#ah)"/><text class="el" x="470" y="30"></text>
+<g class="an n-core"><rect x="660" y="50" width="220" height="200" rx="12"/><text class="t" x="676" y="74">Check engine</text><text class="s" x="676" y="92">14 deterministic checks</text><g class="grp"><rect x="672" y="104" width="196" height="40" rx="8"/><text class="gt" x="684" y="122">Bill · 8</text><text class="s" x="684" y="137">sets the risk score</text></g><g class="grp"><rect x="672" y="150" width="196" height="40" rx="8"/><text class="gt" x="684" y="168">Email · 3</text><text class="s" x="684" y="183">can only tighten</text></g><g class="grp"><rect x="672" y="196" width="196" height="40" rx="8"/><text class="gt" x="684" y="214">Document · 3</text><text class="s" x="684" y="229">can only tighten</text></g></g>
+<path class="edge" d="M880 150 H928" marker-end="url(#ah)"/><text class="el" x="884" y="142">results[14]</text>
+<g class="an n-core"><rect x="930" y="96" width="180" height="108" rx="10"/><text class="t" x="944" y="118">Score</text><text class="s" x="944" y="136">Σ points × weight</text><text class="s" x="944" y="151">+ combo bonuses</text><text class="s" x="944" y="166">→ risk 0–100</text><text class="s" x="944" y="181">confidence = known ÷ 8</text></g>
+<path class="edge" d="M1020 204 V338" marker-end="url(#ah)"/><text class="el" x="1026" y="276">risk</text>
+<g class="an n-core"><rect x="930" y="340" width="180" height="100" rx="10"/><text class="t" x="944" y="362">Stamp</text><text class="st stop" x="944" y="392">STOP</text><text class="st hold" x="994" y="392">HOLD</text><text class="st clear" x="1046" y="392">CLEAR</text><text class="s" x="944" y="420">+ evidence on every flag</text></g>
+<path class="edge" d="M930 390 H882" marker-end="url(#ah)"/><text class="el" x="886" y="382">stamp + proof</text>
+<g class="an n-human"><rect x="660" y="340" width="220" height="100" rx="10"/><text class="t" x="674" y="362">Human decides</text><text class="s" x="674" y="380">pay · reject · call vendor</text><text class="s" x="674" y="395">the only one who can pay</text></g>
+<path class="edge" d="M660 390 H612" marker-end="url(#ah)"/><text class="el" x="616" y="382">decision</text>
+<g class="an n-core"><rect x="430" y="340" width="180" height="100" rx="10"/><text class="t" x="444" y="362">Learning</text><text class="s" x="444" y="380">false alarm → weight × 0.85</text><text class="s" x="444" y="395">confirmed → weight × 1.1</text><text class="s" x="444" y="410">per company</text></g>
+<path class="edge" d="M430 390 H382" marker-end="url(#ah)"/>
+<g class="an n-src"><rect x="210" y="340" width="170" height="100" rx="10"/><text class="t" x="224" y="362">Decision log</text><text class="s" x="224" y="380">every call + its evidence</text><text class="s" x="224" y="395">who signed, when</text></g>
+<path class="edge loop" d="M520 440 V488 Q520 498 530 498 H1110 Q1120 498 1120 488 V160 Q1120 150 1110 150" marker-end="url(#ah)"/><text class="el" x="760" y="492">new weights feed the next score</text>
+</svg>
+      <div class="arch-legend"><span><i class="lg-src"></i>Input / storage</span><span><i class="lg-read"></i>Reading (OCR)</span><span><i class="lg-ext"></i>External data</span><span><i class="lg-core"></i>Deterministic code</span><span><i class="lg-human"></i>Human</span></div>
+      <div class="arch-stats"><div><b>4</b>ways in</div><div><b>6</b>evidence sources</div><div><b>14</b>checks in 3 groups</div><div><b>0</b>AI calls in the verdict</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CHECKS ================= -->
+<section id="checks">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">What it checks</span>
+      <h2 class="h2">Fourteen questions a careful person would ask. <em>Every time.</em></h2>
+      <p class="lead">Each check is plain code with a formula, not an AI guess. Same bill in, same answer out, with the reason attached.</p>
+    </div>
+    <div class="group-label reveal"><b>The bill</b><span>8 checks · these set the risk score</span></div>
+    <div class="checks-grid" id="checks-grid"></div>
+    <div class="groups">
+      <div class="group-card reveal">
+        <div class="group-label"><b>The email</b><span>3 checks</span></div>
+        <div class="gitem"><h3>Sender authenticated (DMARC)</h3><p>Did the inbox verify the email really came from that domain?</p><div class="formula">dmarc = fail → STOP</div></div>
+        <div class="gitem"><h3>Mail signature (SPF / DKIM)</h3><p>Was it sent by a mail server the domain actually authorizes?</p><div class="formula">spf ∨ dkim = pass</div></div>
+        <div class="gitem"><h3>Reply-To matches sender</h3><p>Would your reply secretly go to someone else?</p><div class="formula">domain(reply-to) = domain(from)</div></div>
+      </div>
+      <div class="group-card reveal">
+        <div class="group-label"><b>The document</b><span>3 checks</span></div>
+        <div class="gitem star"><h3>Bank number checksum <span class="wow" title="Key check"></span></h3><p>Is the account number even valid, or made up?</p><p class="say">"Real bank numbers have math built in. Fakes usually fail it."</p><div class="formula">IBAN mod 97 = 1 · ABA check digit</div></div>
+        <div class="gitem"><h3>Line items vs total</h3><p>Do the items actually add up to what you're asked to pay?</p><div class="formula">Σ items + tax = total ± $0.01</div></div>
+        <div class="gitem star"><h3>Document history <span class="wow" title="Key check"></span></h3><p>Was this PDF made the way this vendor's bills usually are, and edited after the fact?</p><p class="say">"Every PDF remembers the software that made it."</p><div class="formula">PDF fingerprint = vendor's past bills</div></div>
+      </div>
+    </div>
+    <p class="groups-note reveal">Email and document checks can only make a stamp stricter, never looser. <a href="app.html#checks">See every formula in the console →</a></p>
+  </div>
+</section>
+
+<!-- ================= SIG ================= -->
+<section id="sig" style="padding:30px 0 100px">
+  <div class="wrap">
+    <div class="meet reveal">
+      <div class="meet-sig" data-sig data-mood="wave" id="meet-sig"></div>
+      <div>
+        <span class="eyebrow">Meet Sig</span>
+        <h2 class="h2" style="margin:14px 0 22px">Tiny arms. <em>Can't press pay.</em></h2>
+        <div class="stamps">
+          <button class="stamp-btn stop" data-try="stop"><span class="st">STOP</span><small>risk ≥ 60<br>likely fraud</small></button>
+          <button class="stamp-btn hold" data-try="hold"><span class="st">HOLD</span><small>new vendor or a flag<br>call them first</small></button>
+          <button class="stamp-btn clear" data-try="clear"><span class="st">CLEAR</span><small>everything matches<br>waits for you</small></button>
+        </div>
+        <p class="meet-rule">Sig can stamp a bill. <b>Only a person can pay it.</b></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PLUGINS ================= -->
+<section id="plugins">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Where it lives</span>
+      <h2 class="h2">It sits <em>where bills already are.</em></h2>
+    </div>
+
+    <div class="shot reveal">
+      <div class="shot-bar"><i></i><i></i><i></i><span class="shot-url">mail · Inbox</span></div>
+      <div class="mail">
+        <aside class="mail-nav">
+          <div class="mail-compose">Compose</div>
+          <div class="mn on">Inbox <b>12</b></div><div class="mn">Starred</div><div class="mn">Sent</div><div class="mn">Bills <b>3</b></div><div class="mn">Archive</div>
+        </aside>
+        <div class="mail-list">
+          <div class="ml sel"><span class="av" style="background:#e8eaff">GC</span><div><b>Google Cloud Billing</b><p><span class="dotred"></span>URGENT: Final notice, invoice GC-90217</p></div><time>9:41</time></div>
+          <div class="ml"><span class="av" style="background:#e4f4ea">V</span><div><b>Vercel</b><p>Your October invoice VC-2541</p></div><time>8:02</time></div>
+          <div class="ml"><span class="av" style="background:#fdf3dc">BS</span><div><b>Brightline Supply Co.</b><p>Invoice BL-0001 for your first order</p></div><time>Yesterday</time></div>
+          <div class="ml"><span class="av" style="background:#f1efe9">NL</span><div><b>Northwind Logistics</b><p>October freight and storage</p></div><time>Oct 14</time></div>
+          <div class="ml"><span class="av" style="background:#f1efe9">PO</span><div><b>Papercraft Office</b><p>Reminder: invoice PC-0519</p></div><time>Oct 13</time></div>
+        </div>
+        <div class="mail-read">
+          <div class="mr-head"><b>URGENT: Final notice, invoice GC-90217</b><span>billing@g00gle-cloud-billing.co · to me</span></div>
+          <div class="mr-body">Your account will be suspended within 24 hours. Note we have updated banking details, please wire $48,250.00 today to the new account. Please do not call our office.</div>
+          <div class="mr-attach">INV-90217.pdf · 64 KB</div>
+          <div class="cs-panel">
+            <div class="cs-head"><span class="brand-mark" data-mark></span><b>Countersign</b><span class="cs-stamp stop">STOP · risk 100</span></div>
+            <ul>
+              <li><span class="ico flag">!</span>Sender imitates google.com</li>
+              <li><span class="ico flag">!</span>Bank account changed ••9021 → ••7730</li>
+              <li><span class="ico flag">!</span>14.6× the usual amount</li>
+              <li><span class="ico flag">!</span>DMARC failed: not really from Google</li>
+            </ul>
+            <div class="cs-actions"><span class="cs-btn">Call vendor</span><span class="cs-btn ghost">Open case</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="shots-2">
+      <div class="shot reveal">
+        <div class="shot-bar"><i></i><i></i><i></i><span class="shot-url">chat · #finance-approvals</span></div>
+        <div class="chatapp">
+          <div class="cmsg"><span class="av" style="background:#fde9e6">MK</span><div><b>Maya K.</b> <time>10:12</time><p>who approved the Vercel bill?</p></div></div>
+          <div class="cmsg"><span class="brand-mark" data-mark></span><div><b>Countersign</b> <span class="appbadge">APP</span> <time>10:12</time>
+            <div class="cbot">
+              <div class="cbot-top"><b>Vercel · VC-2541</b><span class="mono">$1,240.00</span></div>
+              <div class="cbot-tags"><span class="chip green">CLEAR · risk 0</span><span class="chip">14/14 checks</span><span class="chip">same bank as 4 past payments</span></div>
+              <div class="cbot-actions"><span class="cs-btn green">Countersign</span><span class="cs-btn ghost">Hold</span></div>
+            </div></div></div>
+          <div class="cmsg"><span class="av" style="background:#e8eaff">AS</span><div><b>Akmal S.</b> <time>10:13</time><p>signed ✓</p></div></div>
+        </div>
+      </div>
+      <div class="shot reveal">
+        <div class="shot-bar"><i></i><i></i><i></i><span class="shot-url">books · Bills to pay</span></div>
+        <div class="books">
+          <div class="books-tool"><b>Bills to pay</b><span class="books-search">Search bills</span><span class="cs-btn" style="opacity:.5">Pay selected (1)</span></div>
+          <table class="btable">
+            <tr><th></th><th>Vendor</th><th>Due</th><th>Amount</th><th>Countersign</th></tr>
+            <tr><td><span class="cbx on"></span></td><td>Vercel</td><td>Oct 31</td><td class="mono">$1,240.00</td><td><span class="pill clear">Clear</span></td></tr>
+            <tr><td><span class="cbx"></span></td><td>Brightline Supply</td><td>Nov 15</td><td class="mono">$12,800.00</td><td><span class="pill hold">Hold · call</span></td></tr>
+            <tr class="blocked"><td><span class="cbx lock"></span></td><td>Google Cloud</td><td>Today</td><td class="mono">$48,250.00</td><td><span class="pill stop">Stop · locked</span></td></tr>
+            <tr><td><span class="cbx on"></span></td><td>Northwind Logistics</td><td>Nov 1</td><td class="mono">$5,320.00</td><td><span class="pill clear">Clear</span></td></tr>
+          </table>
+          <div class="books-foot">1 bill can't be selected until a person verifies it.</div>
+        </div>
+      </div>
+    </div>
+    <p class="concept reveal">Concept screens showing where the Countersign API plugs in. Not affiliated with any email, chat or accounting product.</p>
+  </div>
+</section>
+
+<!-- ================= API ================= -->
+<section id="api" style="padding-top:40px">
+  <div class="wrap api-grid">
+    <div class="reveal">
+      <span class="eyebrow">For developers</span>
+      <h2 class="h2" style="margin:16px 0 24px">One call before any payment.</h2>
+      <div class="api-points">
+        <div><span class="dot">1</span><div><b>Send the bill</b><p>Raw email, PDF text, or fields you already parsed.</p></div></div>
+        <div><span class="dot">2</span><div><b>Get a stamp with proof</b><p>Risk, confidence, every check with its formula and evidence links.</p></div></div>
+        <div><span class="dot">3</span><div><b>Record the human's call</b><p>Approve, reject or "false alarm". Your weights adapt per company.</p></div></div>
+      </div>
+    </div>
+    <pre class="codebox reveal"><span class="c"># check a bill before it's paid</span>
+curl https://api.countersign.dev/v1/check \
+  -d <span class="s">'{"from":"billing@g00gle-cloud-billing.co",
+       "vendor":"Google Cloud","amount":48250,
+       "account_last4":"7730","invoice":"GC-90217"}'</span>
+
+{
+  <span class="s">"stamp"</span>: <span class="s">"stop"</span>,
+  <span class="s">"risk"</span>: <span class="n">100</span>, <span class="s">"confidence"</span>: <span class="n">100</span>,
+  <span class="s">"checks"</span>: [
+    { <span class="s">"id"</span>: <span class="s">"lookalike"</span>, <span class="s">"severity"</span>: <span class="s">"high"</span>,
+      <span class="s">"why"</span>: <span class="s">"contains 'google' after 0→o, not google.com"</span> },
+    { <span class="s">"id"</span>: <span class="s">"bank"</span>, <span class="s">"severity"</span>: <span class="s">"high"</span>,
+      <span class="s">"why"</span>: <span class="s">"••9021 → ••7730"</span> }, <span class="c">...</span>
+  ],
+  <span class="s">"combos"</span>: [<span class="s">"lookalike + bank_changed"</span>],
+  <span class="s">"pay_allowed"</span>: <span class="n">false</span>  <span class="c">// until a human signs</span>
+}</pre>
+  </div>
+</section>
+
+<!-- ================= CLI ================= -->
+<section id="cli" style="padding-top:0">
+  <div class="wrap api-grid">
+    <div class="reveal">
+      <span class="eyebrow">Command line</span>
+      <h2 class="h2" style="margin:16px 0 24px">Put it in front of your <em>payment run.</em></h2>
+      <div class="api-points">
+        <div><span class="dot">$</span><div><b>countersign check invoice.pdf</b><p>Check one or more PDF bills from the terminal.</p></div></div>
+        <div><span class="dot">$</span><div><b>countersign scan ./this-weeks-bills</b><p>Check every PDF in a folder before the weekly payment run.</p></div></div>
+        <div><span class="dot">$</span><div><b>countersign inbox</b><p>List the open bills waiting in the console.</p></div></div>
+      </div>
+      <p class="muted" style="font-size:14px;margin-top:20px">Flags: <span class="mono">--json</span> for scripts, <span class="mono">--strict</span> to fail on HOLD too, <span class="mono">--fresh</span> to skip the lookup cache. It exits with code 2 if any bill is STOP, so a payment script can refuse to run. It never pays or approves anything.</p>
+    </div>
+    <pre class="codebox term reveal"><span class="c">$</span> countersign scan ./this-weeks-bills
+
+<span class="t-stop">STOP</span>   Northwind Logistics  NW-1219  $48,900.00  risk <span class="n">100</span>
+       Likely fraud. Do not pay until you verify by phone.
+       • Bank details changed: Account changed: ••3310 → ••9944
+       • Amount anomaly: 9.4× the usual amount
+       • pattern: Lookalike sender + new bank account:
+         the classic invoice-redirect scam
+<span class="t-clear">CLEAR</span>  Vercel Inc.  VC-2541  $1,240.00  risk <span class="n">0</span>
+
+2 checked · 1 stop · 0 hold · 1 clear
+<span class="t-stop">Do not run this payment batch until a person reviews the STOP bills.</span>
+
+<span class="c">$</span> echo $?
+<span class="n">2</span></pre>
+  </div>
+</section>
+
+<!-- ================= LEARN ================= -->
+<section style="background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap learn">
+    <div class="reveal">
+      <span class="eyebrow">It learns from your "no"</span>
+      <h2 class="h2" style="margin:16px 0 18px">Your judgment is the training data.</h2>
+      <p class="lead">Mark a flag as a false alarm and that check gets a little quieter for your company. Reject a bill and its flags get louder. Every change is logged, small, and reversible.</p>
+    </div>
+    <div class="slider-card reveal" id="learn-demo">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><b>“Amount anomaly” check · how loud it is</b><span class="autoplay"><i></i>replay</span></div>
+      <div class="gauge" aria-hidden="true">
+        <div class="scale"></div>
+        <div class="tick" style="left:0"></div><div class="tick" style="left:41.2%"></div><div class="tick" style="left:100%"></div>
+        <div class="needle" id="learn-needle"></div>
+        <div class="readout" id="learn-lbl">1.00</div>
+      </div>
+      <div class="ticks"><span>0.3 quieter</span><span>1.0 default</span><span>2.0 louder</span></div>
+      <div class="log" id="learn-log"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CTA ================= -->
+<section class="cta">
+  <div class="wrap">
+    <div class="cta-sig reveal" data-sig data-mood="wave"></div>
+    <h2 class="display reveal">Try catching a <em>fake bill.</em></h2>
+    <p class="lead reveal">Drop in a real bill, or connect your inbox and let it check them for you. You still sign.</p>
+    <div class="hero-ctas reveal"><a class="btn" href="app.html">Open the console →</a></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div><a class="brand" href="#top"><span class="brand-mark" data-mark></span>Countersign</a><p style="margin:10px 0 0">Built at <i>Build Something AI Cannot Do Alone</i> @ Cal, Oct 2026.</p></div>
+    <div class="credits">
+      <b>Credits.</b> Gate-first, prove-before-you-speak architecture from <b>Reva</b> (MIT). "Combinations carry the weight" and lookalike-name ideas from <b>Beagle Brigade</b>. Evidence-history idea from <b>Provenance</b>; learning-from-rejection from <b>Marketing Brain</b>; "only people approve" from <b>Enterprise Brain</b>. Company and web data via <b>Glasser</b>. All invoices shown are samples.
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="js/home.js"></script>
+</body>
+</html>

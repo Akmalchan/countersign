@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Countersign Console</title>
+  <meta name="description" content="Upload bills, check them against live vendor data, and countersign payments.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/console.css">
+  <link rel="stylesheet" href="css/checksdoc.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23d4f74a'/%3E%3Cpath d='M5 21c3-6 5.5-6 5 0s3 5 5.5-1 4.5-6 5 0 2.5 3.5 6.5-2.5' fill='none' stroke='%233340f2' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E">
+</head>
+<body>
+<div class="console">
+  <aside class="sidebar">
+    <a class="brand" href="index.html"><span class="brand-mark" data-mark></span>Countersign</a>
+    <div class="env">ACME ROBOTICS · ACCOUNTS PAYABLE</div>
+    <nav class="side-nav" id="nav">
+      <a href="#inbox" data-route="inbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13h5l2 3h4l2-3h5"/><path d="M5 5h14l2 8v6H3v-6z"/></svg>Inbox<span class="count" id="nav-open" hidden></span></a>
+      <a href="#mailbox" data-route="mailbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Mailbox<span class="count" id="nav-mail" hidden></span></a>
+      <a href="#vendors" data-route="vendors"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21V8l9-5 9 5v13"/><path d="M9 21v-7h6v7"/></svg>Vendors</a>
+      <a href="#audit" data-route="audit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg>Audit log</a>
+      <a href="#policy" data-route="policy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h10M4 18h7"/><circle cx="18" cy="12" r="2"/><circle cx="15" cy="18" r="2"/></svg>Policy</a>
+      <a href="#developers" data-route="developers"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m8 9-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></svg>API &amp; CLI</a>
+      <a href="#checks" data-route="checks"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg>How checks work</a>
+    </nav>
+    <div class="side-foot">
+      <div class="spend"><span>Live data spend</span><b id="spend">–</b></div>
+      <div class="spend"><span>Glasser balance</span><b id="balance">–</b></div>
+      <a href="index.html">Product site</a>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div><div class="crumb" id="crumb">Accounts payable</div><h1 id="title">Inbox</h1></div>
+      <div class="grow"></div>
+      <input class="search" id="search" placeholder="Search vendor, invoice #, amount…" aria-label="Search">
+      <button class="btn sm" id="upload-btn">Upload bills</button>
+      <div class="who"><span class="avatar-i" id="me-initials">–</span><select id="me" aria-label="Signed in as"></select></div>
+    </header>
+    <main class="page" id="page"></main>
+  </div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Upload bills">
+  <div class="drawer-h"><h2>Upload bills</h2><button class="btn sm quiet" id="drawer-close">Close</button></div>
+  <div class="drawer-b" id="drawer-b">
+    <label class="dropzone" id="dropzone">
+      <input type="file" id="file" accept="application/pdf,image/png,image/jpeg,image/webp" multiple hidden>
+      <b>Drop PDFs or photos of bills</b>
+      <p>PDFs are read from their text layer. Photos and screenshots go through OCR. Nothing is paid until people sign.</p>
+      <div class="samples" id="samples"></div>
+    </label>
+    <div id="jobs" style="display:grid;gap:14px"></div>
+  </div>
+</aside>
+<div class="toast2" id="toast"></div>
+
+<script type="module" src="js/console/app.js"></script>
+</body>
+</html>
