@@ -4,7 +4,7 @@
 
 Fake invoices are the most common way businesses lose money to email fraud: a bill that
 looks like it's from a vendor you already pay, one changed bank account, a little panic.
-Countersign reads every bill before money leaves, runs eight deterministic checks against
+Countersign reads every bill before money leaves, runs 14 deterministic checks (the bill, the email, the document) against
 your own records and live company data, shows the proof, and **never pays on its own**.
 
 > AI can read a bill. It can't be accountable for paying it.
